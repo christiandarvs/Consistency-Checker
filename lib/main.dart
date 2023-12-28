@@ -109,7 +109,7 @@ class _ContributionsCalendarState extends State<ContributionsCalendar> {
             TableCalendar(
               calendarFormat: _calendarFormat,
               focusedDay: _focusedDay,
-              firstDay: DateTime(2023),
+              firstDay: DateTime.now(),
               lastDay: DateTime(2025),
               startingDayOfWeek: StartingDayOfWeek.sunday,
               daysOfWeekVisible: true,
