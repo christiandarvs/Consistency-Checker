@@ -76,7 +76,7 @@ class _ContributionsCalendarState extends State<ContributionsCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Consistency Checker')),
+      appBar: AppBar(title: const Text('Consistency Tracker')),
       body: WillPopScope(
         onWillPop: () async {
           final shouldPop = await showDialog<bool>(
