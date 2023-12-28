@@ -1,4 +1,4 @@
-# consistency_checker_app
+# Consistency Checker App
 
 A new Flutter project.
 
