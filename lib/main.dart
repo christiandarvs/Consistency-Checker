@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const GitHubContributionsApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const GitHubContributionsApp());
+  });
 }
 
 class GitHubContributionsApp extends StatelessWidget {
