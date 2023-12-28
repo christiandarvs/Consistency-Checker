@@ -70,87 +70,121 @@ class _ContributionsCalendarState extends State<ContributionsCalendar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Consistency Checker')),
-      body: Column(
-        children: [
-          TableCalendar(
-            calendarFormat: _calendarFormat,
-            focusedDay: _focusedDay,
-            firstDay: DateTime(2023),
-            lastDay: DateTime(2025),
-            startingDayOfWeek: StartingDayOfWeek.sunday,
-            daysOfWeekVisible: true,
-            headerStyle: const HeaderStyle(
-              formatButtonVisible: false,
-            ),
-            calendarStyle: const CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue,
+      body: WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Do you want to exit the app?'),
+                actionsAlignment: MainAxisAlignment.spaceBetween,
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                    child: const Text('Yes'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('No'),
+                  ),
+                ],
+              );
+            },
+          );
+          return shouldPop!;
+        },
+        child: Column(
+          children: [
+            TableCalendar(
+              calendarFormat: _calendarFormat,
+              focusedDay: _focusedDay,
+              firstDay: DateTime(2023),
+              lastDay: DateTime(2025),
+              startingDayOfWeek: StartingDayOfWeek.sunday,
+              daysOfWeekVisible: true,
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
               ),
-              todayDecoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.orange,
-              ),
-              markersMaxCount: 1,
-              // markersPositionBottom: 0,
+              calendarStyle: const CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blue,
+                ),
+                todayDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.orange,
+                ),
+                markersMaxCount: 1,
+                // markersPositionBottom: 0,
 
-              markerDecoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.green,
+                markerDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green,
+                ),
               ),
-            ),
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-              });
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, day, events) {
-                final bool isDone = contributions[day] ?? false;
-                return Container(
-                  decoration: isDone
-                      ? BoxDecoration(
-                          border: Border.all(
-                            color: Colors.green,
-                            width: 2, // Adjust border width as needed
-                          ),
-                          borderRadius: BorderRadius.circular(
-                              10), // Adjust border radius as needed
-                        )
-                      : null,
-                  child: const Center(
-                    child: Text(
-                      '', // Display the date
-                      style: TextStyle(
-                        fontSize: 16, // Adjust font size as needed
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                });
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, day, events) {
+                  final bool isDone = contributions[day] ?? false;
+                  return Container(
+                    decoration: isDone
+                        ? BoxDecoration(
+                            border: Border.all(
+                              color: Colors.green,
+                              width: 2, // Adjust border width as needed
+                            ),
+                            borderRadius: BorderRadius.circular(
+                                10), // Adjust border radius as needed
+                          )
+                        : null,
+                    child: const Center(
+                      child: Text(
+                        '', // Display the date
+                        style: TextStyle(
+                          fontSize: 16, // Adjust font size as needed
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                if (_selectedDay != null) {
-                  contributions[_selectedDay!] =
-                      !(contributions[_selectedDay!] ?? false);
-                  _saveContributions(); // Save the contributions to SharedPreferences
-                }
-              });
-            },
-            child: const Text('Toggle Day'),
-          ),
-        ],
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  if (_selectedDay != null) {
+                    contributions[_selectedDay!] =
+                        !(contributions[_selectedDay!] ?? false);
+                    _saveContributions(); // Save the contributions to SharedPreferences
+                  }
+                });
+              },
+              child: const Text('Toggle Day'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
+// Future<bool> _onWillPop() async {
+//   // Handle the back button press event here
+//   // For instance, you can show an alert dialog to confirm exit or handle custom logic
+//   return true; // Return true to allow back navigation, false to prevent it
+// }
